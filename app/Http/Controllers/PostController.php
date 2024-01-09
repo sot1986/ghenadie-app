@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -13,8 +16,16 @@ class PostController extends Controller
      */
     public function index()
     {
+        // Comment::query()->whereIn('post_id', [10,1,...,12,14])->get();
         return Inertia::render('Posts/List', [
-            'posts' => Post::all(),
+            'result' => Comment::query()
+                ->addSelect([
+                    'post_title' => Post::query()
+                        ->select('title')
+                        ->whereColumn('id', 'comments.post_id')
+                        ->limit(1),
+                ])
+                ->paginate(100),
         ]);
     }
 

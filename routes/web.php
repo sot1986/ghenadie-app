@@ -40,6 +40,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('posts', \App\Http\Controllers\PostController::class);
+    Route::get('comments', function () {
+        return Inertia::render('Comments/List', [
+            'result' => \App\Models\Comment::query()->with([
+                'post',
+                'user',
+            ])->paginate(10),
+        ]);
+    })->name('comments.index');
 });
 
 require __DIR__ . '/auth.php';

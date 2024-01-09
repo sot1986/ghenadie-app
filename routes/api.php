@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get(
+    '/comments/{comment_with_post_title}',
+    \App\Http\Controllers\Comments\ShowCommentWithPostTitleController::class
+)->name('comments.show-with-post-title');

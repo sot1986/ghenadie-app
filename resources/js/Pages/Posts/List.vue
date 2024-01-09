@@ -1,15 +1,17 @@
 <script setup lang="ts">
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Post } from '../../types/Resources/post';
 
 defineOptions({
   name: 'posts.list',
   inheritAttrs: false,
+  layout: AuthenticatedLayout,
 })
 
 withDefaults(defineProps<{
-  posts: Post[]
+  result: unknown
 }>(), {
-  posts: () => [],
+  
 })
 </script>
 
@@ -26,7 +28,8 @@ withDefaults(defineProps<{
         <button type="button" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add post</button>
       </div>
     </div>
-    <div class="mt-8 flow-root">
+    <pre>{{ result }}</pre>
+    <!-- <div class="mt-8 flow-root p-6 bg-white rounded-md shadow-md">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <table class="min-w-full divide-y divide-gray-300">
@@ -54,7 +57,7 @@ withDefaults(defineProps<{
           </table>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 
   </div>

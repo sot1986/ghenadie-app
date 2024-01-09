@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +38,28 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
+        });
+
+        Route::bind('comment_with_post_title', function (string $value) {
+
+            /**
+             * SELECT 
+             * comments.*, 
+             * (SELECT title FROM posts WHERE posts.id = comments.post_id LIMIT 1) AS post_title
+             * FROM comments
+             * WHERE comments.id = 1
+             * LIMIT 1
+             */
+
+            return Comment::query()
+                ->with('post:id,title')
+                ->addSelect([
+                    'post_title' => Post::query()
+                        ->select('title')
+                        ->whereColumn('posts.id', 'comments.post_id')
+                        ->limit(1),
+                ])
+                ->firstOrFail();
         });
     }
 }
