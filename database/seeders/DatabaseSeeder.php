@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create()
+        User::factory(3)->create()
             ->each(function (User $user) {
-                Post::factory(5)->create([
+                Post::factory(2)->create([
                     'user_id' => $user->id,
                 ])->each(function (Post $post) {
                     $this->createComment($post);
@@ -28,6 +28,10 @@ class DatabaseSeeder extends Seeder
                     $this->createComment($post);
                 });
             });
+
+        $paymentSeeder =  new PaymentSeeder();
+
+        $paymentSeeder->run();
     }
 
     protected function createComment(Post $post)

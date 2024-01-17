@@ -18,4 +18,9 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable'); // comment.id = image.imageable_id AND image.imageable_type = 'App\Models\Comment'
+    }
 }

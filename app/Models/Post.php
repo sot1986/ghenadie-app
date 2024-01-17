@@ -11,6 +11,10 @@ class Post extends Model
 
     protected $guarded = [];
 
+    protected $dispatchesEvents = [
+        'deleted' => \App\Events\PostDelete::class,
+    ];
+
     public function lastComment()
     {
         return $this->hasOne(Comment::class)->latestOfMany();
@@ -29,5 +33,10 @@ class Post extends Model
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable'); // post.id = image.imageable_id AND image.imageable_type = 'App\Models\Post'
     }
 }

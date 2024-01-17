@@ -6,17 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    protected $connection = 'mysql2';
-
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->decimal('amount');
+            $table->morphs('imageable');
+            $table->string('name');
+            $table->string('path');
+            $table->string('extension');
+            $table->string('mime_type');
+            $table->unsignedInteger('size');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('images');
     }
 };

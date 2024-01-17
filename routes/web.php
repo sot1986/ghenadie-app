@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Models\User;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -48,6 +49,15 @@ Route::middleware('auth')->group(function () {
             ])->paginate(10),
         ]);
     })->name('comments.index');
+});
+
+Route::get('/test-connection', function () {
+    try {
+        DB::connection('mysql2')->getPdo();
+        return response()->json(['message' => 'Successfully connected to the database.'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
+    }
 });
 
 require __DIR__ . '/auth.php';

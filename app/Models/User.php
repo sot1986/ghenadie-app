@@ -54,4 +54,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable'); // users.id = image.imageable_id AND image.imageable_type = 'App\Models\User'
+    }
 }

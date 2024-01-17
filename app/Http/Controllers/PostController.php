@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostDelete;
 use App\Models\Comment;
+use App\Models\Image;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,14 +20,7 @@ class PostController extends Controller
     {
         // Comment::query()->whereIn('post_id', [10,1,...,12,14])->get();
         return Inertia::render('Posts/List', [
-            'result' => Comment::query()
-                ->addSelect([
-                    'post_title' => Post::query()
-                        ->select('title')
-                        ->whereColumn('id', 'comments.post_id')
-                        ->limit(1),
-                ])
-                ->paginate(100),
+            'posts' => Post::get()
         ]);
     }
 
@@ -81,6 +76,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return redirect()->route('posts.index');
     }
 }

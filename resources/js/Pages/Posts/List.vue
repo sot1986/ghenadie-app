@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Post } from '../../types/Resources/post';
+import { computed } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 defineOptions({
   name: 'posts.list',
@@ -9,10 +11,14 @@ defineOptions({
 })
 
 withDefaults(defineProps<{
-  result: unknown
+  posts: Post[]
 }>(), {
   
 })
+
+function deletePost(id: number) {
+  return router.delete(route('posts.destroy', id));
+}
 </script>
 
 <template>
@@ -28,36 +34,17 @@ withDefaults(defineProps<{
         <button type="button" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add post</button>
       </div>
     </div>
-    <pre>{{ result }}</pre>
-    <!-- <div class="mt-8 flow-root p-6 bg-white rounded-md shadow-md">
-      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <table class="min-w-full divide-y divide-gray-300">
-            <thead>
-              <tr>
-                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Name</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Title</th>                
-                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                  <span class="sr-only">Edit</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              <tr v-for="post in posts" :key="post.id">
-                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">Nome utente</td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ post.title }}</td>
-               
-                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                  <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                    >Edit<span class="sr-only">, {{ post.title }}</span></a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div> -->
+   <ul>
+    <li v-for="post in posts" :key="post.id" class="flex">
+      <div class="flex-1">
+      <h4 class="text-xl">{{ post.title }}</h4>
+      <p class="text-sm text-gray-500 line-clamp-2" >{{ post.body }}</p>
+    </div>
+    <div class="flex items-center p-2">
+      <button type="button" class="text-red-500 font-semibold text-xl" @click="deletePost(post.id)">X</button>
+    </div>
+    </li>
+   </ul>
   </div>
 
   </div>
