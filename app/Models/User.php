@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasImage;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use HasImage;
 
     protected $guarded = [];
 
@@ -33,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'is_admin',
     ];
 
     /**
@@ -43,7 +46,13 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_admin' => 'boolean'
     ];
+
+    public function isAdmin(): bool
+    {
+        return $this->is_admin;
+    }
 
     public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -58,10 +67,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Payment::class);
-    }
-
-    public function images()
-    {
-        return $this->morphMany(Image::class, 'imageable'); // users.id = image.imageable_id AND image.imageable_type = 'App\Models\User'
     }
 }

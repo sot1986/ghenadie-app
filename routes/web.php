@@ -41,6 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('posts', \App\Http\Controllers\PostController::class);
+    Route::patch('posts/{post}/special', [\App\Http\Controllers\PostController::class, 'special'])->name('posts.special');
+    Route::put('posts/{post}/restore', [\App\Http\Controllers\PostController::class, 'restore'])->name('posts.restore');
+    Route::delete('posts/{post}/force-delete', [\App\Http\Controllers\PostController::class, 'forceDelete'])->name('posts.force-delete');
+
     Route::get('comments', function () {
         return Inertia::render('Comments/List', [
             'result' => \App\Models\Comment::query()->with([
@@ -48,7 +52,8 @@ Route::middleware('auth')->group(function () {
                 'user',
             ])->paginate(10),
         ]);
-    })->name('comments.index');
+    })->name('comments.index')
+        ->middleware('can:admin');
 });
 
 Route::get('/test-connection', function () {

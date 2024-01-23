@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
     use HasFactory;
+    use SoftDeletes; // add this line
+    use HasImage;
 
     protected $guarded = [];
 
@@ -33,10 +37,5 @@ class Post extends Model
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function images()
-    {
-        return $this->morphMany(Image::class, 'imageable'); // post.id = image.imageable_id AND image.imageable_type = 'App\Models\Post'
     }
 }

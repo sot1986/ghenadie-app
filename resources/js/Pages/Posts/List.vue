@@ -11,13 +11,29 @@ defineOptions({
 })
 
 withDefaults(defineProps<{
-  posts: Post[]
+  posts: Post[],
+  deleted_posts: Post[],
 }>(), {
-  
+  posts: () => [],
+  deleted_posts: () => [],
 })
 
 function deletePost(id: number) {
   return router.delete(route('posts.destroy', id));
+}
+
+function restorePost(id: number) {
+  return router.put(route('posts.restore', id));
+}
+
+function forceDelete(id: number) {
+  return router.delete(route('posts.force-delete', id));
+}
+
+function specialPost(id: number) {
+  return router.patch(route('posts.special', id), {
+    special: 60,
+  });
 }
 </script>
 
@@ -40,12 +56,23 @@ function deletePost(id: number) {
       <h4 class="text-xl">{{ post.title }}</h4>
       <p class="text-sm text-gray-500 line-clamp-2" >{{ post.body }}</p>
     </div>
-    <div class="flex items-center p-2">
+    <div class="flex items-center p-2 gap-2">
       <button type="button" class="text-red-500 font-semibold text-xl" @click="deletePost(post.id)">X</button>
+      <button type="button" class="text-blue-500" @click="specialPost(post.id)">S</button>
     </div>
     </li>
    </ul>
   </div>
 
+  <div>
+    <h2>Deleted Posts</h2>
+    <ul>
+      <li v-for="post in deleted_posts" class="flex items-center gap-x-2">
+        <span class="flex-1">{{ post.title }}</span>
+        <button type="button" @click="restorePost(post.id)" class="bg-green-500 p-1">R</button>
+        <button type="button" @click="forceDelete(post.id)" class="text-red-500 font-semibold">X X</button>
+      </li>
+    </ul>
+  </div>
   </div>
 </template>
